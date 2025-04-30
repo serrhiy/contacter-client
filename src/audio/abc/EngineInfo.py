@@ -29,7 +29,7 @@ class ErrorType(enum.Enum):
   outputOverflow = enum.auto()
   outputUnderflow = enum.auto()
 
-class AudioInputInfo(abc.ABC):
+class EngineInfo(abc.ABC):
 
   @staticmethod
   @abc.abstractmethod
@@ -39,4 +39,16 @@ class AudioInputInfo(abc.ABC):
 
     Example: PortAudio V19.6.0-devel
     """
-    pass
+    message = 'The class has not defined a static method get_engine_info'
+    raise NotImplementedError(message)
+
+  @staticmethod
+  @abc.abstractmethod
+  def get_engine_code() -> int:
+    """
+    Returns the info of the underlying audio backend.
+
+    Example: 1246720
+    """
+    message = 'The class has not defined a static get_engine_code'
+    raise NotImplementedError(message)
