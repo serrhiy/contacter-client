@@ -29,6 +29,14 @@ class ErrorType(enum.Enum):
   outputOverflow = enum.auto()
   outputUnderflow = enum.auto()
 
+sample_size = {
+  FormatType.float32: 4,
+  FormatType.int32: 4,
+  FormatType.int16: 2,
+  FormatType.int8: 1,
+  FormatType.uInt8: 1,
+}
+
 class EngineInfo(abc.ABC):
 
   @staticmethod
@@ -52,3 +60,9 @@ class EngineInfo(abc.ABC):
     """
     message = 'The class has not defined a static get_engine_code'
     raise NotImplementedError(message)
+
+  @staticmethod
+  def get_sample_size(format: FormatType) -> int:
+    if format in sample_size:
+      return sample_size[format]
+    raise ValueError(f'Format {format} does not exist')
