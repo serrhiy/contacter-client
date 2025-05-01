@@ -11,9 +11,9 @@ def main():
   engine_info = module.EngineInfo.get_engine_info()
   engine_code = module.EngineInfo.get_engine_code()
   print(engine_code, engine_info)
-  driver = module.AudioDriver()
-  for index in range(driver.get_device_count()):
-    info = driver.get_device_info_by_index(index)
-    print(info, end='\n\n')
+  with module.AudioDriver() as driver:
+    for index in range(driver.get_device_count()):
+      info = driver.get_device_info_by_index(index)
+      print(info, end='\n\n')
 
 if __name__ == '__main__': main()

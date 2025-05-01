@@ -42,3 +42,10 @@ class AudioDriver(abc.AudioDriver):
   def get_device_info_by_index(self, index: int) -> DeviceInfo:
     info = self.audio.get_device_info_by_index(index)
     return to_device_info(info)
+
+  def __enter__(self):
+    self.__init__()
+    return self
+
+  def __exit__(self, exc_type, exc_value, traceback):
+    self.audio.terminate()
