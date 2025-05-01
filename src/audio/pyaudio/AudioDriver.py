@@ -2,13 +2,15 @@ import pyaudio
 from audio import abc
 from audio.abc.EngineInfo import FormatType
 from audio.abc.AudioDriver import DeviceInfo
+from .AudioInput import AudioInput
+from .AudioOutput import AudioOutput
 
 def to_device_info(audio_device_info: dict[str: str|int|float]) -> DeviceInfo:
   index = audio_device_info['index']
   name = audio_device_info['name']
   input_channels = audio_device_info['maxInputChannels']
   output_channels = audio_device_info['maxOutputChannels']
-  sample_rate = audio_device_info['defaultSampleRate']
+  sample_rate = int(audio_device_info['defaultSampleRate'])
   return DeviceInfo(index, name, input_channels, output_channels, sample_rate)
 
 class AudioDriver(abc.AudioDriver):
@@ -49,3 +51,21 @@ class AudioDriver(abc.AudioDriver):
 
   def __exit__(self, exc_type, exc_value, traceback):
     self.audio.terminate()
+
+  def open_input_stream(self, rate: float, channels: int, format: FormatType,
+               device_index: int, frames_per_buffer: int, start = True,
+               stream_callback = None) -> abc.AudioInput:
+    frmt = abc.EngineInfo.get_sample_size(format)
+    stream = self.audio.open(rate, channels, frmt, True, False, device_index,
+                             None, frames_per_buffer, start, None, None,
+                             stream_callback)
+    return AudioInput(stream)
+
+  def open_output_stream(self, rate: float, channels: int, format: FormatType,
+               device_index: int, frames_per_buffer: int, start = True,
+               stream_callback = None) -> abc.AudioOutput:
+    frmt = abc.EngineInfo.get_sample_size(format)
+    stream = self.audio.open(rate, channels, frmt, False, True, None,
+                             device_index, frames_per_buffer, start, None,
+                             None, stream_callback)
+    return AudioOutput(stream)

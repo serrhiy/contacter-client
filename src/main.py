@@ -2,8 +2,12 @@ import os
 import importlib
 from audio import abc
 from Config import Config
+from audio.abc.EngineInfo import FormatType
 
 config_path = os.path.join(os.path.dirname(__file__), 'config.json')
+
+RECORD_SECONDS = 5
+CHUNK = 1024
 
 def main():
   config = Config.file(config_path)
@@ -12,8 +16,14 @@ def main():
   engine_code = module.EngineInfo.get_engine_code()
   print(engine_code, engine_info)
   with module.AudioDriver() as driver:
-    for index in range(driver.get_device_count()):
-      info = driver.get_device_info_by_index(index)
-      print(info, end='\n\n')
+    idi = driver.get_default_input_device_info().index
+    odi = driver.get_default_output_device_info().index
+    rate = driver.get_default_input_device_info().default_sample_rate
+    input_stream = driver.open_input_stream(rate, 2, FormatType.int16, idi, CHUNK)
+    output_stream = driver.open_output_stream(rate, 2, FormatType.int16, odi, CHUNK)
+    for _ in range(0, int(rate / CHUNK * RECORD_SECONDS)):
+      output_stream.write(input_stream.read(CHUNK))
+    input_stream.close()
+    output_stream.close()
 
 if __name__ == '__main__': main()
