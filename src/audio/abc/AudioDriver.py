@@ -9,7 +9,7 @@ defined here.
 import abc
 from dataclasses import dataclass
 from audio.abc.EngineInfo import FormatType
-from audio.abc import AudioInput, AudioOutput
+from audio.abc import AudioInput, AudioOutput, AsyncAudioInput
 
 @dataclass
 class DeviceInfo:
@@ -60,5 +60,15 @@ class AudioDriver(abc.ABC):
 
   @abc.abstractmethod
   def open_output_stream(self, rate: float, channels: int, format: FormatType,
+                         device_index: int, frames_per_buffer: int,
+                         start = True) -> AudioOutput: pass
+  
+  @abc.abstractmethod
+  def open_input_async_stream(self, rate: float, channels: int, format: FormatType,
+                        device_index: int, frames_per_buffer: int,
+                        start = True) -> AsyncAudioInput: pass
+
+  @abc.abstractmethod
+  def open_output_async_stream(self, rate: float, channels: int, format: FormatType,
                          device_index: int, frames_per_buffer: int,
                          start = True) -> AudioOutput: pass

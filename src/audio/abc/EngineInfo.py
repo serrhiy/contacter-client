@@ -29,6 +29,13 @@ class ErrorType(enum.Enum):
   outputOverflow = enum.auto()
   outputUnderflow = enum.auto()
 
+class CallbackStatus(enum.Enum):
+  inputUnderflow = enum.auto()
+  inputOverflow = enum.auto()
+  outputUnderflow = enum.auto()
+  outputOverflow = enum.auto()
+  primingOutput = enum.auto()
+
 sample_size = {
   FormatType.float32: 4,
   FormatType.int32: 4,

@@ -7,12 +7,16 @@ defined here.
 """
 
 from audio import abc
-from pyaudio import Stream
+from pyaudio import PyAudio
+from audio.abc.EngineInfo import FormatType
+from audio.abc import EngineInfo
 
 class AudioInput(abc.AudioInput):
-  def __init__(self, stream: Stream):
-    super().__init__()
-    self.stream = stream
+  def __init__(self, audio: PyAudio, rate: float, channels: int, format: FormatType,
+               device_index: int, frames_per_buffer: int,
+               start = True):
+    frmt = EngineInfo.get_sample_size(format)
+    self.stream = audio.open(rate, channels, frmt, True, False, device_index, None, frames_per_buffer, start, None, None, None)
 
   def close(self):
     self.stream.close()

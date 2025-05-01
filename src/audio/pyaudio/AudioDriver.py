@@ -4,6 +4,8 @@ from audio.abc.EngineInfo import FormatType
 from audio.abc.AudioDriver import DeviceInfo
 from .AudioInput import AudioInput
 from .AudioOutput import AudioOutput
+from .AsyncAudioInput import AsyncAudioInput
+from .AsyncAudioOutput import AsyncAudioOutput
 
 def to_device_info(audio_device_info: dict[str: str|int|float]) -> DeviceInfo:
   index = audio_device_info['index']
@@ -55,16 +57,19 @@ class AudioDriver(abc.AudioDriver):
   def open_input_stream(self, rate: float, channels: int, format: FormatType,
                device_index: int, frames_per_buffer: int,
                start = True) -> abc.AudioInput:
-    frmt = abc.EngineInfo.get_sample_size(format)
-    stream = self.audio.open(rate, channels, frmt, True, False, device_index,
-                             None, frames_per_buffer, start, None, None, None)
-    return AudioInput(stream)
+    return AudioInput(self.audio, rate, channels, format, device_index, frames_per_buffer, start)
 
   def open_output_stream(self, rate: float, channels: int, format: FormatType,
                device_index: int, frames_per_buffer: int,
                start = True) -> abc.AudioOutput:
-    frmt = abc.EngineInfo.get_sample_size(format)
-    stream = self.audio.open(rate, channels, frmt, False, True, None,
-                             device_index, frames_per_buffer, start, None,
-                             None, None)
-    return AudioOutput(stream)
+    return AudioOutput(self.audio, rate, channels, format, device_index, frames_per_buffer, start)
+  
+  def open_input_async_stream(self, rate: float, channels: int, format: FormatType,
+              device_index: int, frames_per_buffer: int,
+              start = True) -> abc.AsyncAudioInput:
+    return AsyncAudioInput(self.audio, rate, channels, format, device_index, frames_per_buffer, start)
+
+  def open_output_async_stream(self, rate: float, channels: int, format: FormatType,
+                device_index: int, frames_per_buffer: int,
+                start = True) -> abc.AsyncAudioOutput:
+    return AsyncAudioOutput(self.audio, rate, channels, format, device_index, frames_per_buffer, start)
