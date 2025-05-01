@@ -53,19 +53,18 @@ class AudioDriver(abc.AudioDriver):
     self.audio.terminate()
 
   def open_input_stream(self, rate: float, channels: int, format: FormatType,
-               device_index: int, frames_per_buffer: int, start = True,
-               stream_callback = None) -> abc.AudioInput:
+               device_index: int, frames_per_buffer: int,
+               start = True) -> abc.AudioInput:
     frmt = abc.EngineInfo.get_sample_size(format)
     stream = self.audio.open(rate, channels, frmt, True, False, device_index,
-                             None, frames_per_buffer, start, None, None,
-                             stream_callback)
+                             None, frames_per_buffer, start, None, None, None)
     return AudioInput(stream)
 
   def open_output_stream(self, rate: float, channels: int, format: FormatType,
-               device_index: int, frames_per_buffer: int, start = True,
-               stream_callback = None) -> abc.AudioOutput:
+               device_index: int, frames_per_buffer: int,
+               start = True) -> abc.AudioOutput:
     frmt = abc.EngineInfo.get_sample_size(format)
     stream = self.audio.open(rate, channels, frmt, False, True, None,
                              device_index, frames_per_buffer, start, None,
-                             None, stream_callback)
+                             None, None)
     return AudioOutput(stream)

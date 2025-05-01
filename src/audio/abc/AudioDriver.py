@@ -55,10 +55,10 @@ class AudioDriver(abc.ABC):
 
   @abc.abstractmethod
   def open_input_stream(self, rate: float, channels: int, format: FormatType,
-                        device_index: int, frames_per_buffer: int, start = True,
-                        stream_callback = None) -> AudioInput: pass
+                        device_index: int, frames_per_buffer: int,
+                        start = True) -> AudioInput: pass
 
   @abc.abstractmethod
   def open_output_stream(self, rate: float, channels: int, format: FormatType,
-                         device_index: int, frames_per_buffer: int, start = True,
-                         stream_callback = None) -> AudioOutput: pass
+                         device_index: int, frames_per_buffer: int,
+                         start = True) -> AudioOutput: pass
