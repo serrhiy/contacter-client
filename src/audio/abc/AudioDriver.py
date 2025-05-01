@@ -45,3 +45,9 @@ class AudioDriver(abc.ABC):
   @abc.abstractmethod
   def get_device_info_by_index(self, index: int) -> DeviceInfo:
     pass
+
+  @abc.abstractmethod
+  def __enter__(self) -> "AudioDriver": pass
+  
+  @abc.abstractmethod
+  def __exit__(self, exc_type, exc_value, traceback): pass
